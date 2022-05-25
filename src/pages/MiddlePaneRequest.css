@@ -10,22 +10,18 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
   display: flex;
-  flex-direction: column;  
-  transition:all 300ms ease-in-out;
+  flex-direction: column;
+  transition: all 300ms ease-in-out;
 }
-
 
 .middlePane_searchBar {
-  
   width: 90%;
   transition: all 300ms ease-in-out;
-
 }
 
-.middlePane_searchBar.dark-theme .searchBar_text{
+.middlePane_searchBar.dark-theme .searchBar_text {
   background: #0d0d0d;
 }
-
 
 .middlePane_upper {
   margin-top: 2rem;
@@ -45,21 +41,19 @@
   outline: none;
   border: none;
   background-color: #fff;
-  padding: .4rem .5rem;
+  padding: 0.4rem 0.5rem;
   padding-left: 2rem;
   transition: all 300ms ease-in-out;
 }
 
-.searchBar_text.opened{
+.searchBar_text.opened {
   padding-left: 1.5rem;
 }
 
-.searchBar_text.dark{
+.searchBar_text.dark {
   color: #fff;
   background: #0d0d0d;
 }
-
-
 
 .middlePane_cards {
   /* height: 30%; */
@@ -71,13 +65,9 @@
   padding: 2rem;
   transition: all 300ms ease-in-out;
 
-
-  
   /* margin-bottom: 1%; */
   /* border: 1px solid red; */
-  
 }
-
 
 .recent_heading {
   padding-right: 2%;
@@ -106,115 +96,106 @@
   box-shadow: 0 0 20px rgb(0, 195, 255);
 }
 
-
-.close_button{
-  
+.close_button {
   display: none;
   opacity: 0;
   cursor: pointer;
-  transition: all 0.3s ease-in-out ;
+  transition: all 0.3s ease-in-out;
 }
 
-.close_button.active_close{
+.close_button.active_close {
   display: block;
   opacity: 1;
 }
 
-.middlePane_cards_request{
+.middlePane_cards_request {
   border-radius: 30px;
   margin-top: 5rem;
   box-shadow: 0px 10px 60px rgba(226, 236, 249, 0.5);
   padding: 1rem;
 }
 
-.middlePane_cards_request.dark{
+.middlePane_cards_request.dark {
   box-shadow: 0px 10px 60px rgba(1, 36, 158, 0.5);
-
 }
 
-.middlePane_cards_request.dark h3{
+.middlePane_cards_request.dark h3 {
   color: #fff;
 }
 
-
-
-.requestFiles_content p{
+.requestFiles_content p {
   margin-top: 2rem;
 }
 
-.requestFiles img{
+.requestFiles img {
   width: 40%;
   max-width: 200px;
 }
 /* Theme button */
 
-.theme-toggle{
-
+.theme-toggle {
   height: 24px;
   overflow: hidden;
-
 }
 
-.theme-btn{
+.theme-btn {
   display: flex;
   flex-direction: column;
   align-items: center;
   transition: all 300ms ease-in-out;
 }
 
-.theme-toggle.dark .theme-btn{
+.theme-toggle.dark .theme-btn {
   transform: translateY(-24px);
 }
 
-.midPane-header{
+.midPane-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-.navigation-container{
+.navigation-container {
   width: 80%;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
 }
 
-
-
-.table-header{
+.table-header {
   width: 100%;
   display: flex;
   flex: 1;
 }
 
-.table-header p{
+.table-header p {
   font-size: 14px;
   color: #acacac;
   text-align: left;
   margin-left: 1rem;
 }
 
-.table-header p:nth-child(1){
+.table-header p:nth-child(1) {
   flex: 0.7;
 }
 
-.table-header p:nth-child(2){
+.table-header p:nth-child(2) {
   flex: 0.15;
 }
 
-.table-header p:nth-child(3){
+.table-header p:nth-child(3) {
   flex: 0.15;
 }
 
-.middlePane.dark-theme{
+.middlePane.dark-theme {
   background: #121212;
 }
 
-.middlePane.dark-theme .navigation-container h2{
+.middlePane.dark-theme .navigation-container h2 {
   color: #fff;
 }
 
-.middlePane.dark-theme .middlePane_cards{
+.middlePane.dark-theme .middlePane_cards {
   box-shadow: 0px 10px 60px rgba(1, 36, 158, 0.5);
 }
 
@@ -265,33 +246,32 @@
 .requestFilesMascot1 {
   position: relative;
   top: 0;
-  left: 150px;  /* align-content: center; */
+  left: 150px; /* align-content: center; */
   align-content: center;
   align-items: center;
   justify-content: center;
- 
 }
 .requestFilesMascot2 {
   position: relative;
   top: 0;
-  left: -150px;  /* align-content: center; */
+  left: -150px; /* align-content: center; */
   align-content: center;
   align-items: center;
   justify-content: center;
- 
 }
 .requestFiles_content {
-  align-content: center;
-  align-items: center;
-  flex-direction: column;
-  justify-content: center;
-  position: relative;
   display: flex;
   width: 100%;
-  /* height: 100%; */
-  
 }
 
+.requestFiles_content input {
+  height: 3rem;
+  background-color: #ededed;
+}
+
+.hash_search {
+  padding: 0;
+}
 
 .requestFiles h3 {
   font-family: "Poppins";
@@ -305,8 +285,6 @@
 
   color: #000000;
 }
-
-
 
 .requestFiles p {
   font-family: "Poppins";
@@ -324,7 +302,6 @@
 }
 
 .requestFiles_btn {
-  width: 30%;
   background: #000;
   border: none;
   outline: none;
@@ -337,75 +314,108 @@
   cursor: pointer;
   text-transform: none;
   margin: 0;
-  padding: 1.2rem 1rem;
+  height: 3rem;
+  padding: 0rem 2rem;
+  margin-left: 2rem;
   transition: all 0.3s ease-in-out;
-  margin-top: 2rem;
 }
 
-.requestFiles_content h3{
+.requestFiles_content h3 {
   margin-bottom: 2rem;
 }
 
-.requestFiles_content p{
+.requestFiles_content p {
   margin-top: 2rem;
 }
 
+.req_container {
+  width: 100%;
+  display: flex;
+  padding: 1rem;
+  border-radius: 15px;
+  justify-content: space-between;
+}
+
+.left_req_container {
+  width: 20%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 4px 60px #e2ecf9;
+
+  cursor: pointer;
+}
+.left_req_container1 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.left_req_container h2 {
+  font-size: 1.3rem;
+  margin-top: 2rem;
+}
+
+.right_req_container {
+  width: 75%;
+  box-shadow: 0px 4px 60px #e2ecf9;
+}
 
 /* meida */
 
-@media (min-width:1000px) {
-  .middlePane{
+@media (min-width: 1000px) {
+  .middlePane {
     padding-left: 344px;
     padding-top: 30px;
     padding-bottom: 55px;
     padding-right: 39px;
-    
   }
 
-  .min_upload_section{
+  .min_upload_section {
     display: none;
   }
 }
 
-@media(max-width:1000px){
-  .middlePane{
+@media (max-width: 1000px) {
+  .middlePane {
     width: 100%;
     padding: 0 1rem;
   }
 
-  .theme-toggle{
+  .theme-toggle {
     display: none;
   }
 
-  .middlePane_searchBar{
+  .middlePane_searchBar {
     width: 100%;
   }
 
-  .midPane-header{
+  .midPane-header {
     width: 100%;
   }
-  .midPane-header h2{
+  .midPane-header h2 {
     font-size: 1.2rem;
   }
 
-  .middlePane_cards{
-    padding: .7rem;
+  .middlePane_cards {
+    padding: 0.7rem;
     border-radius: 10px;
   }
 
-  .table-header p:nth-child(2){
-    flex: 0.15;
-    text-align: right;
-  }
-  
-  .table-header p:nth-child(3){
+  .table-header p:nth-child(2) {
     flex: 0.15;
     text-align: right;
   }
 
-  .min_upload_section{
+  .table-header p:nth-child(3) {
+    flex: 0.15;
+    text-align: right;
+  }
+
+  .min_upload_section {
     margin: 1rem 0;
   }
-
 }
-

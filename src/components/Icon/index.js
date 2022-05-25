@@ -32,6 +32,7 @@ import getEnc from "../../utils/enc";
 import { useTheme, useMenuToggle } from "../../contexts/themeContext";
 
 import "./styles.css";
+import DeleteLottie from "../Lotties/delete";
 
 // class Icon extends Component {
 //   nodeRef = createRef();
@@ -351,15 +352,7 @@ const Icon = (props) => {
   const [style, setStyle] = useState({ right: 0, left: 0 });
   const [loading, setLoading] = useState(false);
   const [prevStyle, setPrevStyle] = useState({});
-
-  const defaultLottieOptions = {
-    loop: true,
-    autoplay: true,
-    animationData: deleteLottieData,
-    rendererSettings: {
-      preserveAspectRatio: "xMidYMid slice",
-    },
-  };
+  const [animationOpen, setAnimationOpen] = useState(false);
 
   // console.log("Entry in Icon...", props.entry);
 
@@ -431,6 +424,18 @@ const Icon = (props) => {
       setVisible(false);
       setStyle({ right: 0, left: 0 });
     }
+  };
+
+  const showAnim = () => {
+    setAnimationOpen(true);
+    console.log("show anim...", animationOpen);
+    hideAnim();
+  };
+
+  const hideAnim = () => {
+    setTimeout(() => {
+      setAnimationOpen(false);
+    }, 2000);
   };
 
   const handleDelete = async () => {
@@ -555,101 +560,105 @@ const Icon = (props) => {
     props.entry.children.length === 0 ? (
     ""
   ) : (
-    <Container
-      ref={nodeRef}
-      onClick={() => enterFolder()}
-      className={`card-container ${darkTheme ? "dark-theme" : ""}`}
-    >
-      {/* <div className="lottie">
+    <div>
+      <Container
+        ref={nodeRef}
+        onClick={() => enterFolder()}
+        className={`card-container ${darkTheme ? "dark-theme" : ""}`}
+      >
+        {/* <div className="lottie">
       <Lottie 
         options={defaultLottieOptions}
           height={40}
           width={40}
         />
       </div> */}
-      <div className="file-card">
-        <div className="file-name">
-          <Logo onClick={() => enterFolder()}>
-            <Img src={entry.type == FILE ? FileIcon : FolderIcon} />
-            {/* {entry.type == FILE ? <span>{`.${ext}`}</span> : ""} */}
-          </Logo>
-          <Name className="name">{entry.name}</Name>
+        <div className="file-card">
+          <div className="file-name">
+            <Logo onClick={() => enterFolder()}>
+              <Img src={entry.type == FILE ? FileIcon : FolderIcon} />
+              {/* {entry.type == FILE ? <span>{`.${ext}`}</span> : ""} */}
+            </Logo>
+            <Name className="name">{entry.name}</Name>
+          </div>
+          <div className="file-size">
+            <p>{props.entry.type != "__folder__" ? getSize(entry.size) : ""}</p>
+          </div>
+          <div className="file-type">
+            <p>{entry.type === FILE ? getExt(entry.name) : ""}</p>
+          </div>
         </div>
-        <div className="file-size">
-          <p>{props.entry.type != "__folder__" ? getSize(entry.size) : ""}</p>
-        </div>
-        <div className="file-type">
-          <p>{entry.type === FILE ? getExt(entry.name) : ""}</p>
-        </div>
-      </div>
-      {visible ? (
-        <Menu
-          style={style}
-          content={[
-            {
-              info: "Download",
-              onClick: () => {
-                setLoading(true);
-                axios
-                  .request({
-                    method: "get",
-                    url: `https://api.sarvvid-ai.com/cat?filehash=${
-                      entry.name
-                    }&IMEI=${localStorage.getItem(
-                      "IMEI"
-                    )}&ping=${localStorage.getItem("ping")}`,
-                    headers: {
-                      Accept: "application/json, text/plain, */*",
-                      Authtoken: localStorage.getItem("authtoken"),
-                      "Content-Type": "application/json",
-                      verificationToken: enc,
-                    },
-                    responseType: "blob",
-                  })
-                  .then((response) => {
-                    setLoading(false);
-                    fileDownload(response.data, entry.name);
+        {visible ? (
+          <Menu
+            style={style}
+            content={[
+              {
+                info: "Download",
+                onClick: () => {
+                  setLoading(true);
+                  axios
+                    .request({
+                      method: "get",
+                      url: `https://api.sarvvid-ai.com/cat?filehash=${
+                        entry.name
+                      }&IMEI=${localStorage.getItem(
+                        "IMEI"
+                      )}&ping=${localStorage.getItem("ping")}`,
+                      headers: {
+                        Accept: "application/json, text/plain, */*",
+                        Authtoken: localStorage.getItem("authtoken"),
+                        "Content-Type": "application/json",
+                        verificationToken: enc,
+                      },
+                      responseType: "blob",
+                    })
+                    .then((response) => {
+                      setLoading(false);
+                      fileDownload(response.data, entry.name);
 
-                    console.log("Download resp...", response);
-                  });
+                      console.log("Download resp...", response);
+                    });
+                },
               },
-            },
-            {
-              info: "Share",
-              onClick: () => setShowInfo(true),
-            },
-            {
-              info: "Delete",
-              style: { color: "red" },
-              onClick: () => {
-                handleDelete();
+              {
+                info: "Share",
+                onClick: () => setShowInfo(true),
               },
-            },
-          ]}
-        />
-      ) : (
-        ""
-      )}
-      {showInfo ? (
-        <FileInfo
-          title="File Info"
-          style={prevStyle}
-          closeFn={() => setShowInfo(false)}
-          entry={{
-            type: entry.type,
-            name: entry.name,
-            path: "/",
-            ext: ext,
-            size: entry.size,
-            date: entry.date,
-            creatorName: entry.creatorName,
-          }}
-        />
-      ) : (
-        ""
-      )}
-      {loading ? <LoadingContainer /> : ""}
-    </Container>
+              {
+                info: "Delete",
+                style: { color: "red" },
+                onClick: () => {
+                  handleDelete();
+                  showAnim();
+                },
+              },
+            ]}
+          />
+        ) : (
+          ""
+        )}
+        {showInfo ? (
+          <FileInfo
+            title="File Info"
+            style={prevStyle}
+            closeFn={() => setShowInfo(false)}
+            entry={{
+              type: entry.type,
+              name: entry.name,
+              path: "/",
+              ext: ext,
+              size: entry.size,
+              date: entry.date,
+              creatorName: entry.creatorName,
+            }}
+          />
+        ) : (
+          ""
+        )}
+        {loading ? <LoadingContainer /> : ""}
+      </Container>
+      {animationOpen ? <DeleteLottie /> : ""}
+    </div>
   );
 };
 

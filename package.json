@@ -46,6 +46,8 @@
     "react-select": "^5.3.1",
     "react-select-country-list": "^2.2.3",
     "redux": "^4.0.1",
+    "semantic-ui-css": "^2.4.1",
+    "semantic-ui-react": "^2.1.2",
     "styled-components": "^4.1.1",
     "uuidv4": "^6.2.12"
   },

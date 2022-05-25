@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./MiddlePaneRequest.css";
 import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";
@@ -26,7 +26,16 @@ import mascotReq2 from "../assets/img/mascot_req2.png";
 import axios from "axios";
 import fileDownload from "js-file-download";
 import { useAlert } from "react-alert";
+import DeleteLottie from "../components/Lotties/delete";
 import { dark } from "@material-ui/core/styles/createPalette";
+import uploadBigIcon from "../assets/img/uploadBig.svg";
+import "semantic-ui-css/semantic.min.css";
+import { Header, Table } from "semantic-ui-react";
+import copyIcon from "../assets/img/copy.svg";
+import { Modal } from "@material-ui/core";
+import { getStorage } from "../utils/storageHandler";
+import getEnc from "../utils/enc";
+import UploadLottie from "../components/Lotties/upload";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -42,8 +51,22 @@ const RequestViewFiles = () => {
   const toggleMenu = useMenuToggle();
   const toggleBtn = useMenuUpdateToggle();
   const classes = useStyles();
+  const storageData = getStorage();
+  const enc = getEnc();
 
   const [fileHash, setFileHash] = useState("");
+  const [animationOpen, setAnimationOpen] = useState(false);
+  const [openHashModal, setOpenHashModal] = useState(false);
+  const [fileHash1, setFileHash1] = useState("");
+  const [ipfsDocument, setIpfsDocument] = useState([]);
+  const [fileUploading, setFileUploading] = useState({
+    // fileName: {name:fileName, progress: 0, totalprogress: 0 },
+  });
+  const [disableUploadButton, setDisableUploadButton] = useState(false);
+  const [ipfsFileUploading, setIpfsFileUploading] = useState({
+    // fileName: {name:fileName, progress: 0, totalprogress: 0 },
+  });
+
   const newAlert = useAlert();
 
   const downloadIpfsFile = async () => {
@@ -61,6 +84,144 @@ const RequestViewFiles = () => {
       newAlert.error(err.response.message || "Failed to download file");
     }
   };
+
+  const showAnim = () => {
+    setAnimationOpen(true);
+    hideAnim();
+  };
+
+  const hideAnim = () => {
+    setTimeout(() => {
+      setAnimationOpen(false);
+    }, 2000);
+  };
+
+  const onIpfsFileChange = (event) => {
+    // Update the state
+    console.log("Selected FILE for IPFS...", event.target.files);
+
+    console.log("First ipfs file", event.target.files[0].webkitRelativePath);
+    let str =
+      event.target.files[0].webkitRelativePath.split("/")[0] +
+      "/" +
+      event.target.files[0].name;
+
+    if (str in fileUploading) {
+      console.log("=======TRUE=======");
+      for (let key in event.target.files) {
+        let arr = event.target.files[key].webkitRelativePath.split("/");
+        arr[0] = arr[0] + "_" + new Date();
+        let webkit = "";
+        for (let string of arr) {
+          webkit = webkit + string + "/";
+        }
+        webkit.slice(0, -1);
+        console.log("webkit===============>>>", webkit);
+        event.target.files[key].webkitRelativePath = webkit;
+      }
+    }
+
+    setIpfsDocument(event.target.files);
+    
+  };
+
+  const onIpfsUpload = async () => {
+    console.log("uploading file to IPFS...");
+    const formData = new FormData();
+    formData.append("IMEI", localStorage.getItem("IMEI"));
+    formData.append("name", "avatar");
+
+    console.log("upload ipfs file data...", ipfsDocument[0]);
+
+    if (ipfsDocument[0].size > storageData.rem_bytes) {
+      newAlert.error("Not enough space");
+      return;
+    } else {
+      console.log("Continue uploading");
+    }
+
+    setDisableUploadButton(true);
+    formData.append("filedata", ipfsDocument[0]);
+
+    let string;
+    string = {};
+    string[ipfsDocument[0].name] = {
+      name: ipfsDocument[0].name,
+      progress: 0,
+      totalprogress: 0,
+    };
+
+    setIpfsFileUploading({ ...fileUploading, ...string });
+
+    if (localStorage.getItem("authtoken")) {
+      console.log(localStorage.getItem("authtoken"));
+    } else {
+      localStorage.setItem("authtoken", "65aa9ad20c8a2e900c8a65aa51f66c140c8a");
+    }
+
+    const at = localStorage.getItem("authtoken");
+    console.log("auth token...", at);
+
+    // console.log("formdata for ipfs", formData);
+
+    axios({
+      method: "post",
+      url: `https://api.sarvvid-ai.com/ipfs/upload`,
+      headers: {
+        "Content-type": "multipart/form-data",
+        Authtoken: at,
+        verificationToken: enc,
+      },
+      data: formData,
+      onUploadProgress: function (progressEvent) {
+        let s1 = formData.get("filedata");
+        let s2 = s1.name;
+        let totalP = 0;
+        totalP = progressEvent.total;
+        let prog = progressEvent.loaded;
+        let obj = {};
+
+        if (progressEvent.loaded === progressEvent.total) {
+          obj = { ...fileUploading };
+          delete obj[s2];
+          setFileUploading({ ...obj });
+        } else {
+          obj[s2] = { name: s2, progress: prog, totalprogress: totalP };
+          setFileUploading({ ...fileUploading, ...obj });
+        }
+      },
+    })
+      .then((response) => {
+        console.log("ipfs upload resp...", response);
+        setFileHash1(response.data.hash);
+        setOpenHashModal(true);
+        setIpfsDocument([]);
+        newAlert.success("File uploaded successfully to IPFS");
+        setDisableUploadButton(false);
+      })
+      .catch((err) => {
+        console.log("upload ipfs error...", err);
+        newAlert.error(
+          "Server is up for maintenance. Please Try After Some Time"
+        );
+        setDisableUploadButton(false);
+
+        let s1 = formData.get("filedata");
+        let s2 = s1.webkitRelativePath.split("/")[0] + "/" + s1.name;
+        let obj = { ...fileUploading };
+        delete obj[s2];
+        setFileUploading({ ...obj });
+        setIpfsDocument([]);
+      });
+
+    setAnimationOpen(false);
+  };
+
+  useEffect(() => {
+    if (ipfsDocument.length > 0) {
+      onIpfsUpload();
+    }
+  }, [ipfsDocument]);
 
   return (
     <div
@@ -110,20 +271,20 @@ const RequestViewFiles = () => {
         style={{ background: `${darkTheme ? "#121212" : "#fff"}` }}
       >
         <div className="requestFiles">
-          <img className="requestFilesMascot1" src={mascotReq1} alt="mascot" />
+          <h3>Download file from hash</h3>
           <div className="requestFiles_content">
-            <h3>Download file from hash</h3>
             <input
               type="search"
               label="Search"
               placeholder="Enter hash"
               id="outlined-search"
-              className={`searchBar_text  ${darkTheme ? "dark" : ""}`}
+              className={`searchBar_text  ${
+                darkTheme ? "dark" : ""
+              } hash_search`}
               value={fileHash}
               onChange={(e) => setFileHash(e.target.value)}
             />
 
-            <p>Easily access files from a single hash 🚀</p>
             <button
               type="button"
               className="requestFiles_btn"
@@ -134,7 +295,7 @@ const RequestViewFiles = () => {
               Download
             </button>
           </div>
-          <img className="requestFilesMascot2" src={mascotReq2} alt="mascot" />
+          <p>Easily access files from a single hash 🚀</p>
         </div>
         {/* <div className="midPane-header">
           <div className="navigation-container">
@@ -167,6 +328,80 @@ const RequestViewFiles = () => {
           <p>Made for Web3. Made with love from bharat</p>
         </div> */}
       </div>
+      <div className="req_container">
+        <div className="left_req_container">
+          <label htmlFor="filePickerIpfs" className="left_req_container1">
+            <img src={uploadBigIcon} alt="upload" />
+            <h2>Upload to IPFS</h2>
+          </label>
+          <input
+            id="filePickerIpfs"
+            style={{ visibility: "hidden", width: "0%" }}
+            type="file"
+            onChange={(e) => {
+              onIpfsFileChange(e);
+            }}
+          />
+        </div>
+        <div className="right_req_container">
+          <Table celled={false}>
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell>Serial no.</Table.HeaderCell>
+                <Table.HeaderCell>Hash</Table.HeaderCell>
+                <Table.HeaderCell>Copy</Table.HeaderCell>
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              <Table.Row>
+                <Table.Cell>1</Table.Cell>
+                <Table.Cell>kajalsjjcinesaiohfiesbcibaecie</Table.Cell>
+                <Table.Cell>
+                  <img src={copyIcon} alt="" />
+                </Table.Cell>
+              </Table.Row>
+              <Table.Row>
+                <Table.Cell>2</Table.Cell>
+                <Table.Cell>kajalsjjcinesaiohfiesbcibaecie</Table.Cell>
+                <Table.Cell>
+                  <img src={copyIcon} alt="" />
+                </Table.Cell>
+              </Table.Row>
+              <Table.Row>
+                <Table.Cell>3</Table.Cell>
+                <Table.Cell>kajalsjjcinesaiohfiesbcibaecie</Table.Cell>
+                <Table.Cell>
+                  <img src={copyIcon} alt="" />
+                </Table.Cell>
+              </Table.Row>
+            </Table.Body>
+          </Table>
+        </div>
+      </div>
+      <Modal
+        open={openHashModal}
+        onClose={() => setOpenHashModal(false)}
+        className="hash_modal"
+      >
+        <div className="hash_modal_inner">
+          <h1>Your file has been uploaded successfully to IPFS</h1>
+          <h4>
+            Click on the hash below to copy the hash for downloding the file in
+            future.
+          </h4>
+          <div
+            className="file_hash"
+            onClick={() => {
+              navigator.clipboard.writeText(fileHash);
+              newAlert.success("hash copied to clipboard");
+            }}
+          >
+            <p>{fileHash1}</p>
+            <img src={copyIcon} alt="copy" />
+          </div>
+        </div>
+      </Modal>
+      {animationOpen ? <UploadLottie /> : ""}
     </div>
   );
 };

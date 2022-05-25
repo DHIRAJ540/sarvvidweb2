@@ -31,6 +31,7 @@ import { virgilCrypto } from "react-native-virgil-crypto";
 import { useAlert } from "react-alert";
 import { Modal } from "@material-ui/core";
 import copyIcon from "../../../assets/img/copy.svg";
+import UploadLottie from "../../Lotties/upload";
 
 const StyledMenu = withStyles({
   paper: {
@@ -81,6 +82,7 @@ function CustomizedMenus(props) {
   const [disableUploadButton, setDisableUploadButton] = useState(false);
   const [openHashModal, setOpenHashModal] = useState(false);
   const [fileHash, setFileHash] = useState("");
+  const [animationOpen, setAnimationOpen] = useState(false);
 
   const onFileChange = (event) => {
     console.log("hiii");
@@ -148,7 +150,19 @@ function CustomizedMenus(props) {
     }
   };
 
+  const showAnim = () => {
+    setAnimationOpen(true);
+    hideAnim();
+  };
+
+  const hideAnim = () => {
+    setTimeout(() => {
+      setAnimationOpen(false);
+    }, 2000);
+  };
+
   const onFileUpload = () => {
+    setAnimationOpen(true);
     console.log("Uploading File===============>>>>>>");
     const formData = new FormData();
     formData.append("IMEI", localStorage.getItem("IMEI"));
@@ -360,6 +374,8 @@ function CustomizedMenus(props) {
           setDisableUploadButton(false);
           selectedDocument([]);
         }
+
+        setAnimationOpen(false);
       })
       .catch((err) => {
         console.log(err);
@@ -375,6 +391,7 @@ function CustomizedMenus(props) {
         delete obj[s2];
         setFileUploading({ ...obj });
         selectedDocument([]);
+        setAnimationOpen(false);
       });
   };
 
@@ -750,6 +767,7 @@ function CustomizedMenus(props) {
         setOpenHashModal(true);
         setIpfsDocument([]);
         newAlert.success("File uploaded successfully to IPFS");
+        setDisableUploadButton(false);
       })
       .catch((err) => {
         console.log("upload ipfs error...", err);
@@ -965,16 +983,16 @@ function CustomizedMenus(props) {
         className="hash_modal"
       >
         <div className="hash_modal_inner">
-          <h1>Your file has been downloaded successfully to IPFS</h1>
+          <h1>Your file has been uploaded successfully to IPFS</h1>
           <h4>
-            Click on the hash below tp copy the hash for downloding the file in
+            Click on the hash below to copy the hash for downloding the file in
             future.
           </h4>
           <div
             className="file_hash"
             onClick={() => {
-              navigator.clipboard.writeText(fileHash)
-              newAlert.success("hash copied to clipboard")
+              navigator.clipboard.writeText(fileHash);
+              newAlert.success("hash copied to clipboard");
             }}
           >
             <p>{fileHash}</p>
@@ -982,6 +1000,7 @@ function CustomizedMenus(props) {
           </div>
         </div>
       </Modal>
+      {animationOpen ? <UploadLottie /> : ""}
     </div>
   );
 }
