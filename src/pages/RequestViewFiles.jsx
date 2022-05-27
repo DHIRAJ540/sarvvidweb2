@@ -122,7 +122,6 @@ const RequestViewFiles = () => {
     }
 
     setIpfsDocument(event.target.files);
-    
   };
 
   const onIpfsUpload = async () => {
@@ -215,6 +214,11 @@ const RequestViewFiles = () => {
       });
 
     setAnimationOpen(false);
+  };
+
+  const copyFileHash = () => {
+    newAlert.success("Hash copied to clipboard");
+    navigator.clipboard.writeText("demo hash");
   };
 
   useEffect(() => {
@@ -329,10 +333,16 @@ const RequestViewFiles = () => {
         </div> */}
       </div>
       <div className="req_container">
-        <div className="left_req_container">
-          <label htmlFor="filePickerIpfs" className="left_req_container1">
+        <div className={`left_req_container ${darkTheme ? "dark" : ""}`}>
+          <label
+            htmlFor="filePickerIpfs"
+            className="left_req_container1"
+            style={{ background: `${darkTheme ? "#121212" : "#fff"}` }}
+          >
             <img src={uploadBigIcon} alt="upload" />
-            <h2>Upload to IPFS</h2>
+            <h2 style={{ color: `${darkTheme ? "#fafafa" : "#000"}` }}>
+              Upload to IPFS
+            </h2>
           </label>
           <input
             id="filePickerIpfs"
@@ -343,39 +353,45 @@ const RequestViewFiles = () => {
             }}
           />
         </div>
-        <div className="right_req_container">
-          <Table celled={false}>
-            <Table.Header>
-              <Table.Row>
-                <Table.HeaderCell>Serial no.</Table.HeaderCell>
-                <Table.HeaderCell>Hash</Table.HeaderCell>
-                <Table.HeaderCell>Copy</Table.HeaderCell>
-              </Table.Row>
-            </Table.Header>
-            <Table.Body>
-              <Table.Row>
-                <Table.Cell>1</Table.Cell>
-                <Table.Cell>kajalsjjcinesaiohfiesbcibaecie</Table.Cell>
-                <Table.Cell>
-                  <img src={copyIcon} alt="" />
-                </Table.Cell>
-              </Table.Row>
-              <Table.Row>
-                <Table.Cell>2</Table.Cell>
-                <Table.Cell>kajalsjjcinesaiohfiesbcibaecie</Table.Cell>
-                <Table.Cell>
-                  <img src={copyIcon} alt="" />
-                </Table.Cell>
-              </Table.Row>
-              <Table.Row>
-                <Table.Cell>3</Table.Cell>
-                <Table.Cell>kajalsjjcinesaiohfiesbcibaecie</Table.Cell>
-                <Table.Cell>
-                  <img src={copyIcon} alt="" />
-                </Table.Cell>
-              </Table.Row>
-            </Table.Body>
-          </Table>
+        <div className={`right_req_container ${darkTheme ? "dark" : ""}`}>
+          <div className="req_table-header">
+            <p>Serial no.</p>
+            <p>File hash</p>
+            <p>Copy</p>
+          </div>
+          <div className={`card-container ${darkTheme ? "dark-theme" : ""}`}>
+            <div className="file-card">
+              <div className="file-no">1</div>
+              <div className="file-hash">
+                c89a47275538010b67501279fcbff8c794f4eb56630633ee36f013992f002dfa
+              </div>
+              <div className="file-copy">
+                <img src={copyIcon} alt="copy" onClick={() => copyFileHash()} />
+              </div>
+            </div>
+          </div>
+          <div className={`card-container ${darkTheme ? "dark-theme" : ""}`}>
+            <div className="file-card">
+              <div className="file-no">2</div>
+              <div className="file-hash">
+                07478829e1cbb7ab7963318b3a52b372b07af814dc094ad37aba837dc5473bfa
+              </div>
+              <div className="file-copy">
+                <img src={copyIcon} alt="copy" onClick={() => copyFileHash()} />
+              </div>
+            </div>
+          </div>
+          <div className={`card-container ${darkTheme ? "dark-theme" : ""}`}>
+            <div className="file-card">
+              <div className="file-no">3</div>
+              <div className="file-hash">
+                d259e5771a10fd3cae0f318fd4fda3dedf9559e2e01a2f84e8dc17bdfdf5c270
+              </div>
+              <div className="file-copy">
+                <img src={copyIcon} alt="copy" onClick={() => copyFileHash()} />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <Modal

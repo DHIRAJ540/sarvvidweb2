@@ -334,6 +334,7 @@
   padding: 1rem;
   border-radius: 15px;
   justify-content: space-between;
+  margin-top: 5rem;
 }
 
 .left_req_container {
@@ -343,15 +344,23 @@
   align-items: center;
   justify-content: center;
   box-shadow: 0px 4px 60px #e2ecf9;
-
+  border-radius: 15px;
+  padding: 1.5rem;
   cursor: pointer;
 }
+
+.left_req_container.dark {
+  box-shadow: 0px 10px 60px rgb(1 36 158 / 50%);
+}
+
 .left_req_container1 {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  border-radius: 15px;
+  padding: 1.5rem;
 }
 
 .left_req_container h2 {
@@ -362,6 +371,96 @@
 .right_req_container {
   width: 75%;
   box-shadow: 0px 4px 60px #e2ecf9;
+  border-radius: 15px;
+}
+
+.file-card {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.file-no {
+  flex: 0.15;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  padding-right: 1rem;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  font-size: 18px;
+
+  transition: all 300ms ease-in-out;
+}
+
+.file-hash {
+  flex: 0.7;
+  text-align: left;
+  margin: 0;
+  font-size: 18px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  transition: all 300ms ease-in-out;
+}
+
+.file-hash p {
+  margin: 0;
+  font-size: 18px;
+  text-overflow: ellipsis;
+}
+
+.file-copy {
+  font-size: 18px;
+  flex: 0.15;
+  text-align: left;
+  margin: 0;
+  margin-left: 1rem;
+  cursor: pointer;
+  transition: all 300ms ease-in-out;
+}
+
+.file-copy img {
+  transition: all 300ms ease-in-out;
+}
+
+.file-copy img:hover {
+  margin-left: 0.3rem;
+}
+
+.req_table-header {
+  width: 100%;
+  display: flex;
+  flex: 1;
+  padding-top: 1rem;
+}
+
+.req_table-header p {
+  font-size: 18px;
+  color: #acacac;
+  text-align: left;
+  margin-left: 1rem;
+}
+
+.req_table-header p:nth-child(1) {
+  flex: 0.15;
+}
+
+.req_table-header p:nth-child(2) {
+  flex: 0.7;
+}
+
+.req_table-header p:nth-child(3) {
+  flex: 0.15;
+}
+
+.right_req_container.dark {
+  box-shadow: 0px 10px 60px rgb(1 36 158 / 50%);
 }
 
 /* meida */
