@@ -32,6 +32,8 @@ import { useAlert } from "react-alert";
 import { Modal } from "@material-ui/core";
 import copyIcon from "../../../assets/img/copy.svg";
 import UploadLottie from "../../Lotties/upload";
+import folderIcon from "../../../assets/img/folder-icon.svg";
+import fileIcon from "../../../assets/img/file.svg";
 
 const StyledMenu = withStyles({
   paper: {
@@ -118,7 +120,11 @@ function CustomizedMenus(props) {
     type: "None",
   });
   const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
+    if (!Boolean(anchorEl)) {
+      setAnchorEl(event.currentTarget);
+    } else {
+      setAnchorEl(null);
+    }
   };
 
   const handleClose = () => {
@@ -860,7 +866,87 @@ function CustomizedMenus(props) {
           </Button>
         </div>
       )}
-      <StyledMenu
+
+      <div
+        className={`menu_container ${darkTheme ? "dark" : ""} ${
+          Boolean(anchorEl) ? "open" : ""
+        }`}
+      >
+        <div className="menu_item_container">
+          <label
+            htmlFor="filePicker"
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              marginBottom: "0",
+              backgorund: "green",
+            }}
+          >
+            <div className="menu_item">
+              <img src={fileIcon} alt="file" />
+              <p>File</p>
+            </div>
+          </label>
+          <input
+            id="filePicker"
+            style={{ visibility: "hidden", width: "0%" }}
+            type="file"
+            onChange={(e) => {
+              onFileChange(e);
+            }}
+          />
+        </div>
+        <div className="menu_item_container">
+          <label
+            htmlFor="folderPicker"
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              marginBottom: "0",
+            }}
+          >
+            <div className="menu_item">
+              <img src={folderIcon} alt="file" />
+              <p>Folder</p>
+            </div>
+          </label>
+          <input
+            directory=""
+            webkitdirectory=""
+            id="folderPicker"
+            type="file"
+            style={{ visibility: "hidden", width: "0%" }}
+            onChange={(event) => {
+              console.log("ALLL FILES>>>>>>>>>>>>>>>", event.target.files);
+              console.log("target========>", event.target.files);
+              console.log(event.target.files[0].webkitRelativePath);
+              let str =
+                event.target.files[0].webkitRelativePath.split("/")[0] +
+                "/" +
+                event.target.files[0].name;
+
+              if (str in fileUploading) {
+                console.log("=======TRUE=======");
+                for (let key in event.target.files) {
+                  let arr =
+                    event.target.files[key].webkitRelativePath.split("/");
+                  arr[0] = arr[0] + "_" + new Date();
+                  let webkit = "";
+                  for (let string of arr) {
+                    webkit = webkit + string + "/";
+                  }
+                  webkit.slice(0, -1);
+                  console.log("webkit===============>>>", webkit);
+                  event.target.files[key].webkitRelativePath = webkit;
+                }
+              }
+
+              selectedfiles(event.target.files);
+            }}
+          />
+        </div>
+      </div>
+      {/* <StyledMenu
         id="customized-menu"
         anchorEl={anchorEl}
         keepMounted
@@ -972,7 +1058,7 @@ function CustomizedMenus(props) {
             }}
           />
         </StyledMenuItem>
-      </StyledMenu>
+      </StyledMenu> */}
       <CreateModal
         hover={() => props.onEnterProgress()}
         files={fileUploading}

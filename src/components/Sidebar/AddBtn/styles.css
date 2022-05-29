@@ -55,3 +55,44 @@
 .file_hash:hover {
   opacity: 1;
 }
+
+.menu_container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2rem;
+  overflow: hidden;
+}
+
+.menu_item_container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(-100%);
+}
+
+.menu_item {
+  min-width: 100px;
+  text-align: center;
+  padding: 0.5rem;
+  border-radius: 5px;
+  background: rgb(255, 255, 255);
+  cursor: pointer;
+  transform: translateY(-100%);
+
+  transition: all 0.3s ease-in-out;
+}
+
+.menu_item:hover {
+  transform: scale(1.03);
+}
+
+.menu_container.dark .menu_item {
+  background-color: #222222;
+}
+
+.menu_container.open .menu_item,
+.menu_container.open .menu_item_container {
+  transform: translateY(0%);
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}

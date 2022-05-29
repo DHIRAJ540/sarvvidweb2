@@ -22,6 +22,8 @@ import moonIcon from "../assets/img/moon.svg";
 import sunIcon from "../assets/img/sun.svg";
 import gridIcon from "../assets/img/grid.svg";
 import gridDarkIcon from "../assets/img/griddark.svg";
+import listIcon from "../assets/img/listMenu.svg";
+import listDarkIcon from "../assets/img/listMenuDark.svg";
 import CustomizedMenus from "../components/Sidebar/AddBtn/CustomizedMenus";
 import { addEntry, deleteEntry, setEntry } from "../actions/fileSystem";
 import { connect } from "react-redux";
@@ -44,6 +46,7 @@ const ViewFiles = (props) => {
   const classes = useStyles();
   const [sideDrawerToggle, setSideDrawerToggle] = useState(true);
   const dispatch = useDispatch();
+  const [gridView, setGridView] = useState(false)
 
   console.log("viewfiles props...", props);
 
@@ -130,6 +133,12 @@ const ViewFiles = (props) => {
             <Navigation />
           </div>
           <div className="layout-toggle">
+            {darkTheme ? (
+              <img src={listDarkIcon} alt="grid" />
+            ) : (
+              <img src={listIcon} alt="grid" />
+            )}
+
             {darkTheme ? (
               <img src={gridDarkIcon} alt="grid" />
             ) : (
