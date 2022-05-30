@@ -182,7 +182,7 @@ const Sidebar = ({ fileStructure, ...props }) => {
               ) : (
                 <img src={fileDarkIcon} alt="" />
               )}
-              <h6>File request</h6>
+              <h6>IPFS</h6>
             </div>
 
             <div

@@ -631,7 +631,7 @@ const Icon = (props) => {
                 },
               },
               {
-                info: "Share",
+                info: "Details",
                 onClick: () => setShowInfo(true),
               },
               {
