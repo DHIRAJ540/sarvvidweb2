@@ -1,7 +1,7 @@
 .lottie {
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  /* box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px; */
   position: absolute;
   bottom: 3rem;
-  left: 3rem;
+  right: 3rem;
   z-index: 99999999;
 }

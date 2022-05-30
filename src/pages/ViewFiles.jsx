@@ -26,9 +26,11 @@ import listIcon from "../assets/img/listMenu.svg";
 import listDarkIcon from "../assets/img/listMenuDark.svg";
 import CustomizedMenus from "../components/Sidebar/AddBtn/CustomizedMenus";
 import { addEntry, deleteEntry, setEntry } from "../actions/fileSystem";
-import { connect } from "react-redux";
+import { useSelector } from "react-redux";
 import { generateTreeFromList } from "../utils/fileSystem";
 import { FOLDER } from "../utils/constants";
+import UploadLottie from "../components/Lotties/upload";
+import DownloadLottie from "../components/Lotties/download";
 import md5 from "md5";
 
 const useStyles = makeStyles((theme) => ({
@@ -46,7 +48,10 @@ const ViewFiles = (props) => {
   const classes = useStyles();
   const [sideDrawerToggle, setSideDrawerToggle] = useState(true);
   const dispatch = useDispatch();
-  const [gridView, setGridView] = useState(false)
+  const [gridView, setGridView] = useState(false);
+  const { uploadLoading, downloadLoading } = useSelector(
+    (state) => state.loader
+  );
 
   console.log("viewfiles props...", props);
 
@@ -159,6 +164,8 @@ const ViewFiles = (props) => {
       >
         <p>Made for Web3. Made with ❤️ from Bharat(India)</p>
       </div>
+      {uploadLoading ? <UploadLottie /> : ""}
+      {downloadLoading ? <DownloadLottie /> : ""}
     </div>
   );
 };

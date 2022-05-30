@@ -34,6 +34,7 @@ import copyIcon from "../../../assets/img/copy.svg";
 import UploadLottie from "../../Lotties/upload";
 import folderIcon from "../../../assets/img/folder-icon.svg";
 import fileIcon from "../../../assets/img/file.svg";
+import { setUploadLoading } from "../../../actions/loaderAction";
 
 const StyledMenu = withStyles({
   paper: {
@@ -168,7 +169,8 @@ function CustomizedMenus(props) {
   };
 
   const onFileUpload = () => {
-    setAnimationOpen(true);
+    // setAnimationOpen(true);
+    dispatch(setUploadLoading(true));
     console.log("Uploading File===============>>>>>>");
     const formData = new FormData();
     formData.append("IMEI", localStorage.getItem("IMEI"));
@@ -380,8 +382,7 @@ function CustomizedMenus(props) {
           setDisableUploadButton(false);
           selectedDocument([]);
         }
-
-        setAnimationOpen(false);
+        dispatch(setUploadLoading(false));
       })
       .catch((err) => {
         console.log(err);
@@ -397,7 +398,7 @@ function CustomizedMenus(props) {
         delete obj[s2];
         setFileUploading({ ...obj });
         selectedDocument([]);
-        setAnimationOpen(false);
+        dispatch(setUploadLoading(false));
       });
   };
 
@@ -873,15 +874,7 @@ function CustomizedMenus(props) {
         }`}
       >
         <div className="menu_item_container">
-          <label
-            htmlFor="filePicker"
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              marginBottom: "0",
-              backgorund: "green",
-            }}
-          >
+          <label htmlFor="filePicker">
             <div className="menu_item">
               <img src={fileIcon} alt="file" />
               <p>File</p>
@@ -897,14 +890,7 @@ function CustomizedMenus(props) {
           />
         </div>
         <div className="menu_item_container">
-          <label
-            htmlFor="folderPicker"
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              marginBottom: "0",
-            }}
-          >
+          <label htmlFor="folderPicker">
             <div className="menu_item">
               <img src={folderIcon} alt="file" />
               <p>Folder</p>

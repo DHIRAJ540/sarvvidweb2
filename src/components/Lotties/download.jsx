@@ -1,9 +1,9 @@
 import React from "react";
 import Lottie from "react-lottie";
-import animationData from "../../assets/Lotties/upload.json";
-// import "./lottie.css";
+import animationData from "../../assets/Lotties/download.json";
+import "./lottie.css";
 
-const UploadLottie = () => {
+const DownloadLottie = () => {
   const animationOptions = {
     loop: true,
     autoplay: true,
@@ -17,4 +17,4 @@ const UploadLottie = () => {
   );
 };
 
-export default UploadLottie;
+export default DownloadLottie;

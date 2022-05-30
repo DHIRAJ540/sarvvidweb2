@@ -30,8 +30,12 @@ import Lottie from "react-lottie";
 import deleteLottieData from "../../assets/Lotties/delete.json";
 import getEnc from "../../utils/enc";
 import { useTheme, useMenuToggle } from "../../contexts/themeContext";
-
+import { useDispatch, useSelector } from "react-redux";
 import "./styles.css";
+import {
+  setDeleteLoading,
+  setDownloadLoading,
+} from "../../actions/loaderAction";
 import DeleteLottie from "../Lotties/delete";
 
 // class Icon extends Component {
@@ -346,6 +350,8 @@ const Icon = (props) => {
   const darkTheme = useTheme();
   const toggleMenuValue = useMenuToggle();
   const enc = getEnc();
+  const dispatch = useDispatch();
+  const { deleteLoading } = useSelector((state) => state.loader);
 
   const [visible, setVisible] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
@@ -433,8 +439,9 @@ const Icon = (props) => {
   };
 
   const hideAnim = () => {
+    dispatch(setDeleteLoading(true));
     setTimeout(() => {
-      setAnimationOpen(false);
+      dispatch(setDeleteLoading(false));
     }, 2000);
   };
 
@@ -521,6 +528,7 @@ const Icon = (props) => {
       console.log("deleteResp...", deleteResp);
 
       props.setEntry(JSON.parse(localStorage.getItem("fileSystem")));
+      hideAnim();
     } catch (error) {
       console.log("Delete file...", error);
     }
@@ -595,7 +603,8 @@ const Icon = (props) => {
               {
                 info: "Download",
                 onClick: () => {
-                  setLoading(true);
+                  // setLoading(true);
+                  dispatch(setDownloadLoading(true));
                   axios
                     .request({
                       method: "get",
@@ -617,6 +626,7 @@ const Icon = (props) => {
                       fileDownload(response.data, entry.name);
 
                       console.log("Download resp...", response);
+                      dispatch(setDownloadLoading(false));
                     });
                 },
               },
@@ -655,9 +665,9 @@ const Icon = (props) => {
         ) : (
           ""
         )}
-        {loading ? <LoadingContainer /> : ""}
+        {/* {loading ? <LoadingContainer /> : ""} */}
       </Container>
-      {animationOpen ? <DeleteLottie /> : ""}
+      {deleteLoading ? <DeleteLottie /> : ""}
     </div>
   );
 };
