@@ -408,7 +408,7 @@ const RequestViewFiles = () => {
           <div
             className="file_hash"
             onClick={() => {
-              navigator.clipboard.writeText(fileHash);
+              navigator.clipboard.writeText(fileHash1);
               newAlert.success("hash copied to clipboard");
             }}
           >
