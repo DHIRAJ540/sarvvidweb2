@@ -37,6 +37,7 @@ import {
   setDownloadLoading,
 } from "../../actions/loaderAction";
 import DeleteLottie from "../Lotties/delete";
+import { Modal } from "@material-ui/core";
 
 // class Icon extends Component {
 //   nodeRef = createRef();
@@ -647,7 +648,15 @@ const Icon = (props) => {
         ) : (
           ""
         )}
-        {showInfo ? (
+        <Modal
+          open={showInfo}
+          onClose={() => setShowInfo(false)}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
           <FileInfo
             title="File Info"
             style={prevStyle}
@@ -661,10 +670,12 @@ const Icon = (props) => {
               date: entry.date,
               creatorName: entry.creatorName,
             }}
+            fileEntry={props.entry}
+            deleteFn={props.deleteFn}
+            hideAnim={hideAnim}
+            setEntry={props.setEntry}
           />
-        ) : (
-          ""
-        )}
+        </Modal>
         {/* {loading ? <LoadingContainer /> : ""} */}
       </Container>
       {deleteLoading ? <DeleteLottie /> : ""}

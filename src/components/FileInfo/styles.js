@@ -48,3 +48,5 @@ export const Details = {
     text-align: left;
   `
 };
+
+
