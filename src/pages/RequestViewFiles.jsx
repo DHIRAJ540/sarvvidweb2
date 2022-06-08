@@ -67,6 +67,8 @@ const RequestViewFiles = () => {
     // fileName: {name:fileName, progress: 0, totalprogress: 0 },
   });
 
+  const [allHashes, setAllHashes] = useState([]);
+
   const newAlert = useAlert();
 
   const downloadIpfsFile = async () => {
@@ -196,6 +198,7 @@ const RequestViewFiles = () => {
         setOpenHashModal(true);
         setIpfsDocument([]);
         newAlert.success("File uploaded successfully to IPFS");
+        getAllHashes();
         setDisableUploadButton(false);
       })
       .catch((err) => {
@@ -216,9 +219,26 @@ const RequestViewFiles = () => {
     setAnimationOpen(false);
   };
 
-  const copyFileHash = () => {
+  const copyFileHash = (hash) => {
     newAlert.success("Hash copied to clipboard");
-    navigator.clipboard.writeText("demo hash");
+    navigator.clipboard.writeText(hash);
+  };
+
+  const getAllHashes = async () => {
+    try {
+      await axios
+        .get(
+          `https://api.sarvvid-ai.com/ipfs/get/files?uniqueID=${localStorage.getItem(
+            "IMEI"
+          )}`
+        )
+        .then((resp) => {
+          console.log("all hashes...", resp);
+          setAllHashes(resp.data);
+        });
+    } catch (error) {
+      console.log("all hashes error...", error);
+    }
   };
 
   useEffect(() => {
@@ -226,6 +246,10 @@ const RequestViewFiles = () => {
       onIpfsUpload();
     }
   }, [ipfsDocument]);
+
+  useEffect(() => {
+    getAllHashes();
+  }, []);
 
   return (
     <div
@@ -359,39 +383,21 @@ const RequestViewFiles = () => {
             <p>File hash</p>
             <p>Copy</p>
           </div>
-          <div className={`card-container ${darkTheme ? "dark-theme" : ""}`}>
-            <div className="file-card">
-              <div className="file-no">1</div>
-              <div className="file-hash">
-                c89a47275538010b67501279fcbff8c794f4eb56630633ee36f013992f002dfa
-              </div>
-              <div className="file-copy">
-                <img src={copyIcon} alt="copy" onClick={() => copyFileHash()} />
-              </div>
-            </div>
-          </div>
-          <div className={`card-container ${darkTheme ? "dark-theme" : ""}`}>
-            <div className="file-card">
-              <div className="file-no">2</div>
-              <div className="file-hash">
-                07478829e1cbb7ab7963318b3a52b372b07af814dc094ad37aba837dc5473bfa
-              </div>
-              <div className="file-copy">
-                <img src={copyIcon} alt="copy" onClick={() => copyFileHash()} />
+          {allHashes.map((item, index) => (
+            <div className={`card-container ${darkTheme ? "dark-theme" : ""}`}>
+              <div className="file-card">
+                <div className="file-no">{index + 1}</div>
+                <div className="file-hash">{item.hash}</div>
+                <div className="file-copy">
+                  <img
+                    src={copyIcon}
+                    alt="copy"
+                    onClick={() => copyFileHash(item.hash)}
+                  />
+                </div>
               </div>
             </div>
-          </div>
-          <div className={`card-container ${darkTheme ? "dark-theme" : ""}`}>
-            <div className="file-card">
-              <div className="file-no">3</div>
-              <div className="file-hash">
-                d259e5771a10fd3cae0f318fd4fda3dedf9559e2e01a2f84e8dc17bdfdf5c270
-              </div>
-              <div className="file-copy">
-                <img src={copyIcon} alt="copy" onClick={() => copyFileHash()} />
-              </div>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
       <Modal

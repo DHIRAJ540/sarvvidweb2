@@ -238,6 +238,8 @@ const SettingsViewFiles = () => {
     }
   };
 
+  const handleImage = async () => {};
+
   return (
     <div
       className={`middlePane ${toggleMenu ? "" : "opened"} ${
@@ -312,12 +314,25 @@ const SettingsViewFiles = () => {
                 </h6>
               </div>
               <div className="user_avatar">
-                <img
-                  className="rainbow_shadow"
-                  src={RainbowShadow}
-                  alt="shadow"
-                />
                 <img className="user_img" src={AccountIcon} alt="account" />
+                <label
+                  htmlFor="imagePicker"
+                  style={{
+                    color: `${darkTheme ? "#aaa" : "#acacac"}`,
+                    height: "max-content",
+                    width: "max-content",
+                  }}
+                >
+                  <p className="change_link">Change avatar</p>
+                  <input
+                    id="imagePicker"
+                    style={{ visibility: "hidden", width: "0%" }}
+                    type="file"
+                    onChange={(e) => {
+                      handleImage(e);
+                    }}
+                  />
+                </label>
               </div>
             </div>
           </div>

@@ -347,6 +347,7 @@
   border-radius: 15px;
   padding: 1.5rem;
   cursor: pointer;
+  max-height: 230px;
 }
 
 .left_req_container.dark {

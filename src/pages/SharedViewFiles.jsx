@@ -35,6 +35,8 @@ const SharedViewFiles = () => {
   const classes = useStyles();
   const [emptyFiles, setEmptyFiles] = useState(true);
 
+  
+
   return (
     <div
       className={`middlePane  ${toggleMenu ? "" : "opened"} ${
