@@ -407,7 +407,11 @@ const RightPane = (props) => {
       {isLoading ? <Loader /> : ""}
       <div className="rightPane_user">
         <div className="user_info">
-          <img src={AccountIcon} alt="account" />
+          {localStorage.getItem("avatar") ? (
+            <img src={localStorage.getItem("avatar")} alt="account" />
+          ) : (
+            <img src={AccountIcon} alt="account" />
+          )}
           <div className="user_details">
             <h3 style={{ color: `${darkTheme ? "#ccc" : "#121212"}` }}>
               {userName}

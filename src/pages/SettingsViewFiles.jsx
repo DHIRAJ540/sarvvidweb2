@@ -68,6 +68,7 @@ const SettingsViewFiles = () => {
   );
   const [customEmailMessage, setCustomEmailMessage] = useState("");
   const [openCustom, setOpenCustom] = useState(false);
+  const [profileImage, setProfileImage] = useState();
 
   const planOptions = [
     { value: "1TB", label: "1TB" },
@@ -238,7 +239,31 @@ const SettingsViewFiles = () => {
     }
   };
 
-  const handleImage = async () => {};
+  const handleImage = async (e) => {
+    console.log("image...", e.target.files);
+    // setProfileImage(e.target.files);
+    // console.log("profile image...", profileImage);
+    const formData = new FormData();
+    formData.append("image", e.target.files[0]);
+    formData.append("uniqueID", localStorage.getItem("IMEI"));
+
+    try {
+      const resp = await axios({
+        method: "post",
+        url: "https://api.sarvvid-ai.com/update/u/profile/image",
+        headers: {
+          "Content-type": "multipart/form-data",
+        },
+        data: formData,
+      });
+
+      console.log("upload profile image resp...", resp);
+      localStorage.setItem("avatar", resp.data.imgUri);
+      newAlert.success(resp.data.message);
+    } catch (error) {
+      console.log("upload profile error...", error);
+    }
+  };
 
   return (
     <div
@@ -314,13 +339,19 @@ const SettingsViewFiles = () => {
                 </h6>
               </div>
               <div className="user_avatar">
-                <img className="user_img" src={AccountIcon} alt="account" />
+                <img
+                  className="user_img"
+                  src={localStorage.getItem("avatar")}
+                  alt="account"
+                />
                 <label
                   htmlFor="imagePicker"
                   style={{
                     color: `${darkTheme ? "#aaa" : "#acacac"}`,
                     height: "max-content",
                     width: "max-content",
+                    display: "block",
+                    margin: 0,
                   }}
                 >
                   <p className="change_link">Change avatar</p>
