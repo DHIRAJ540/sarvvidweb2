@@ -4,6 +4,7 @@ import recycleBin from "./recycleBinReducer";
 import storage from "./storageReducer";
 import allData from "./allDataReducer";
 import loader from "./loaderReducer";
+import shared from "./sharedFilesReducer";
 
 export default combineReducers({
   fileSystem,
@@ -11,4 +12,5 @@ export default combineReducers({
   storage,
   allData,
   loader,
+  shared,
 });

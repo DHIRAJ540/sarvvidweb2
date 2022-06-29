@@ -55,41 +55,41 @@ const ViewFiles = (props) => {
 
   console.log("viewfiles props...", props);
 
-  useEffect(() => {
-    axios(
-      `https://api.sarvvid-ai.com/getdata?ping=${localStorage.getItem("ping")}`,
-      {
-        method: "POST",
-        headers: {
-          Accept: "application/json, text/plain, */*", // It can be used to overcome cors errors
-          "Content-Type": "application/json",
-          Authtoken: localStorage.getItem("authtoken"),
-        },
-        data: JSON.stringify({
-          IMEI: localStorage.getItem("IMEI"),
-        }),
-      }
-    ).then((resp) => {
-      console.log("Get data resp...", resp);
+  // useEffect(() => {
+  //   axios(
+  //     `https://api.sarvvid-ai.com/getdata?ping=${localStorage.getItem("ping")}`,
+  //     {
+  //       method: "POST",
+  //       headers: {
+  //         Accept: "application/json, text/plain, */*", // It can be used to overcome cors errors
+  //         "Content-Type": "application/json",
+  //         Authtoken: localStorage.getItem("authtoken"),
+  //       },
+  //       data: JSON.stringify({
+  //         IMEI: localStorage.getItem("IMEI"),
+  //       }),
+  //     }
+  //   ).then((resp) => {
+  //     console.log("Get data resp...", resp);
 
-      const respData = resp.data.storage_info;
+  //     const respData = resp.data.storage_info;
 
-      const storageData = {
-        imageCount: respData.images_count,
-        audioCount: respData.audios_count,
-        videoCount: respData.videos_count,
-        documentCount: respData.docs_count,
-        othersCount: respData.others_count,
-        imageSize: respData.images_size,
-        audioSize: respData.audios_size,
-        videoSize: respData.videos_size,
-        documentSize: respData.docs_size,
-        othersSize: respData.others_size,
-      };
+  //     const storageData = {
+  //       imageCount: respData.images_count,
+  //       audioCount: respData.audios_count,
+  //       videoCount: respData.videos_count,
+  //       documentCount: respData.docs_count,
+  //       othersCount: respData.others_count,
+  //       imageSize: respData.images_size,
+  //       audioSize: respData.audios_size,
+  //       videoSize: respData.videos_size,
+  //       documentSize: respData.docs_size,
+  //       othersSize: respData.others_size,
+  //     };
 
-      dispatch(updateStorageInfo(storageData));
-    });
-  });
+  //     dispatch(updateStorageInfo(storageData));
+  //   });
+  // });
 
   return (
     <div

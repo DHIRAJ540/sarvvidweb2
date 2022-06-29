@@ -112,7 +112,9 @@ function CustomizedMenus(props) {
         event.target.files[key].webkitRelativePath = webkit;
       }
     }
+
     selectedDocument(event.target.files);
+    // console.log("After document...", document);
   };
 
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -180,6 +182,7 @@ function CustomizedMenus(props) {
     //   document[0],
     //   "secret"
     // )
+
     console.log("upload file data...", document[0]);
 
     if (document[0].size > storageData.rem_bytes) {
@@ -275,7 +278,7 @@ function CustomizedMenus(props) {
           const pid = md5(props.currentpath + FOLDER);
 
           console.log("pid...", pid, "   current path...", props);
-          console.log(data[pid]);
+          console.log("DATA...", data[pid]);
 
           var newEntry = {};
           newEntry.parentPath = props.currentpath;
@@ -674,134 +677,134 @@ function CustomizedMenus(props) {
       });
   };
 
-  const onIpfsFileChange = (event) => {
-    // Update the state
-    console.log("Selected FILE for IPFS...", event.target.files);
+  // const onIpfsFileChange = (event) => {
+  //   // Update the state
+  //   console.log("Selected FILE for IPFS...", event.target.files);
 
-    console.log("First ipfs file", event.target.files[0].webkitRelativePath);
-    let str =
-      event.target.files[0].webkitRelativePath.split("/")[0] +
-      "/" +
-      event.target.files[0].name;
+  //   console.log("First ipfs file", event.target.files[0].webkitRelativePath);
+  //   let str =
+  //     event.target.files[0].webkitRelativePath.split("/")[0] +
+  //     "/" +
+  //     event.target.files[0].name;
 
-    if (str in fileUploading) {
-      console.log("=======TRUE=======");
-      for (let key in event.target.files) {
-        let arr = event.target.files[key].webkitRelativePath.split("/");
-        arr[0] = arr[0] + "_" + new Date();
-        let webkit = "";
-        for (let string of arr) {
-          webkit = webkit + string + "/";
-        }
-        webkit.slice(0, -1);
-        console.log("webkit===============>>>", webkit);
-        event.target.files[key].webkitRelativePath = webkit;
-      }
-    }
+  //   if (str in fileUploading) {
+  //     console.log("=======TRUE=======");
+  //     for (let key in event.target.files) {
+  //       let arr = event.target.files[key].webkitRelativePath.split("/");
+  //       arr[0] = arr[0] + "_" + new Date();
+  //       let webkit = "";
+  //       for (let string of arr) {
+  //         webkit = webkit + string + "/";
+  //       }
+  //       webkit.slice(0, -1);
+  //       console.log("webkit===============>>>", webkit);
+  //       event.target.files[key].webkitRelativePath = webkit;
+  //     }
+  //   }
 
-    setIpfsDocument(event.target.files);
-  };
+  //   setIpfsDocument(event.target.files);
+  // };
 
-  const onIpfsUpload = async () => {
-    console.log("uploading file to IPFS...");
-    const formData = new FormData();
-    formData.append("IMEI", localStorage.getItem("IMEI"));
-    formData.append("name", "avatar");
+  // const onIpfsUpload = async () => {
+  //   console.log("uploading file to IPFS...");
+  //   const formData = new FormData();
+  //   formData.append("IMEI", localStorage.getItem("IMEI"));
+  //   formData.append("name", "avatar");
 
-    console.log("upload ipfs file data...", ipfsDocument[0]);
+  //   console.log("upload ipfs file data...", ipfsDocument[0]);
 
-    if (ipfsDocument[0].size > storageData.rem_bytes) {
-      newAlert.error("Not enough space");
-      return;
-    } else {
-      console.log("Continue downloading");
-    }
+  //   if (ipfsDocument[0].size > storageData.rem_bytes) {
+  //     newAlert.error("Not enough space");
+  //     return;
+  //   } else {
+  //     console.log("Continue downloading");
+  //   }
 
-    setDisableUploadButton(true);
-    formData.append("filedata", ipfsDocument[0]);
+  //   setDisableUploadButton(true);
+  //   formData.append("filedata", ipfsDocument[0]);
 
-    let string;
-    string = {};
-    string[ipfsDocument[0].name] = {
-      name: ipfsDocument[0].name,
-      progress: 0,
-      totalprogress: 0,
-    };
+  //   let string;
+  //   string = {};
+  //   string[ipfsDocument[0].name] = {
+  //     name: ipfsDocument[0].name,
+  //     progress: 0,
+  //     totalprogress: 0,
+  //   };
 
-    setIpfsFileUploading({ ...fileUploading, ...string });
+  //   setIpfsFileUploading({ ...fileUploading, ...string });
 
-    if (localStorage.getItem("authtoken")) {
-      console.log(localStorage.getItem("authtoken"));
-    } else {
-      localStorage.setItem("authtoken", "65aa9ad20c8a2e900c8a65aa51f66c140c8a");
-    }
+  //   if (localStorage.getItem("authtoken")) {
+  //     console.log(localStorage.getItem("authtoken"));
+  //   } else {
+  //     localStorage.setItem("authtoken", "65aa9ad20c8a2e900c8a65aa51f66c140c8a");
+  //   }
 
-    const at = localStorage.getItem("authtoken");
-    console.log("auth token...", at);
+  //   const at = localStorage.getItem("authtoken");
+  //   console.log("auth token...", at);
 
-    // console.log("formdata for ipfs", formData);
+  //   // console.log("formdata for ipfs", formData);
 
-    axios({
-      method: "post",
-      url: `https://api.sarvvid-ai.com/ipfs/upload`,
-      headers: {
-        "Content-type": "multipart/form-data",
-        Authtoken: at,
-        verificationToken: enc,
-      },
-      data: formData,
-      onUploadProgress: function (progressEvent) {
-        let s1 = formData.get("filedata");
-        let s2 = s1.name;
-        let totalP = 0;
-        totalP = progressEvent.total;
-        let prog = progressEvent.loaded;
-        let obj = {};
+  //   axios({
+  //     method: "post",
+  //     url: `https://api.sarvvid-ai.com/ipfs/upload`,
+  //     headers: {
+  //       "Content-type": "multipart/form-data",
+  //       Authtoken: at,
+  //       verificationToken: enc,
+  //     },
+  //     data: formData,
+  //     onUploadProgress: function (progressEvent) {
+  //       let s1 = formData.get("filedata");
+  //       let s2 = s1.name;
+  //       let totalP = 0;
+  //       totalP = progressEvent.total;
+  //       let prog = progressEvent.loaded;
+  //       let obj = {};
 
-        if (progressEvent.loaded === progressEvent.total) {
-          obj = { ...fileUploading };
-          delete obj[s2];
-          setFileUploading({ ...obj });
-        } else {
-          obj[s2] = { name: s2, progress: prog, totalprogress: totalP };
-          setFileUploading({ ...fileUploading, ...obj });
-        }
-      },
-    })
-      .then((response) => {
-        console.log("ipfs upload resp...", response);
-        setFileHash(response.data.hash);
-        setOpenHashModal(true);
-        setIpfsDocument([]);
-        newAlert.success("File uploaded successfully to IPFS");
-        setDisableUploadButton(false);
-      })
-      .catch((err) => {
-        console.log("upload ipfs error...", err);
-        newAlert.error(
-          "Server is up for maintenance. Please Try After Some Time"
-        );
-        setDisableUploadButton(false);
+  //       if (progressEvent.loaded === progressEvent.total) {
+  //         obj = { ...fileUploading };
+  //         delete obj[s2];
+  //         setFileUploading({ ...obj });
+  //       } else {
+  //         obj[s2] = { name: s2, progress: prog, totalprogress: totalP };
+  //         setFileUploading({ ...fileUploading, ...obj });
+  //       }
+  //     },
+  //   })
+  //     .then((response) => {
+  //       console.log("ipfs upload resp...", response);
+  //       setFileHash(response.data.hash);
+  //       setOpenHashModal(true);
+  //       setIpfsDocument([]);
+  //       newAlert.success("File uploaded successfully to IPFS");
+  //       setDisableUploadButton(false);
+  //     })
+  //     .catch((err) => {
+  //       console.log("upload ipfs error...", err);
+  //       newAlert.error(
+  //         "Server is up for maintenance. Please Try After Some Time"
+  //       );
+  //       setDisableUploadButton(false);
 
-        let s1 = formData.get("filedata");
-        let s2 = s1.webkitRelativePath.split("/")[0] + "/" + s1.name;
-        let obj = { ...fileUploading };
-        delete obj[s2];
-        setFileUploading({ ...obj });
-        setIpfsDocument([]);
-      });
-  };
+  //       let s1 = formData.get("filedata");
+  //       let s2 = s1.webkitRelativePath.split("/")[0] + "/" + s1.name;
+  //       let obj = { ...fileUploading };
+  //       delete obj[s2];
+  //       setFileUploading({ ...obj });
+  //       setIpfsDocument([]);
+  //     });
+  // };
 
+  // useEffect(() => {
+  //   if (ipfsDocument.length > 0) {
+  //     onIpfsUpload();
+  //   }
+  // }, [ipfsDocument]);
   useEffect(() => {
     if (document.length > 0) {
       onFileUpload();
     }
   }, [document]);
-  useEffect(() => {
-    if (ipfsDocument.length > 0) {
-      onIpfsUpload();
-    }
-  }, [ipfsDocument]);
   useEffect(() => {
     if (files.length > 0) {
       onFolderUpload();

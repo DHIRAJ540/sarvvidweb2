@@ -32,10 +32,14 @@ import uploadBigIcon from "../assets/img/uploadBig.svg";
 import "semantic-ui-css/semantic.min.css";
 import { Header, Table } from "semantic-ui-react";
 import copyIcon from "../assets/img/copy.svg";
+import shareIcon from "../assets/img/share1.svg";
 import { Modal } from "@material-ui/core";
 import { getStorage } from "../utils/storageHandler";
 import getEnc from "../utils/enc";
 import UploadLottie from "../components/Lotties/upload";
+import { useDispatch } from "react-redux";
+import { setUploadLoading } from "../actions/loaderAction";
+import { updateSharedHistoryInfo } from "../actions/sharedFiles";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -53,6 +57,7 @@ const RequestViewFiles = () => {
   const classes = useStyles();
   const storageData = getStorage();
   const enc = getEnc();
+  const dispatch = useDispatch();
 
   const [fileHash, setFileHash] = useState("");
   const [animationOpen, setAnimationOpen] = useState(false);
@@ -68,23 +73,14 @@ const RequestViewFiles = () => {
   });
 
   const [allHashes, setAllHashes] = useState([]);
+  const [shareModal, setShareModal] = useState(false);
+  const [shareEmail, setShareEmail] = useState("");
+  const [shareHash, setShareHash] = useState("");
 
   const newAlert = useAlert();
 
   const downloadIpfsFile = async () => {
-    try {
-      const response = await axios.get(
-        `https://api.sarvvid-ai.com/ipfs/get/file/${fileHash}`
-      );
-
-      fileDownload(response.data, fileHash);
-      newAlert.success("file downloaded successfully");
-
-      console.log("ipfs download resonse", response);
-    } catch (err) {
-      console.log(err);
-      newAlert.error(err.response.message || "Failed to download file");
-    }
+    window.location.href = `https://api.sarvvid-ai.com/ipfs/get/file/${fileHash}`;
   };
 
   const showAnim = () => {
@@ -128,6 +124,7 @@ const RequestViewFiles = () => {
 
   const onIpfsUpload = async () => {
     console.log("uploading file to IPFS...");
+    dispatch(setUploadLoading(true));
     const formData = new FormData();
     formData.append("IMEI", localStorage.getItem("IMEI"));
     formData.append("name", "avatar");
@@ -216,7 +213,7 @@ const RequestViewFiles = () => {
         setIpfsDocument([]);
       });
 
-    setAnimationOpen(false);
+    dispatch(setUploadLoading(false));
   };
 
   const copyFileHash = (hash) => {
@@ -238,6 +235,26 @@ const RequestViewFiles = () => {
         });
     } catch (error) {
       console.log("all hashes error...", error);
+    }
+  };
+
+  const handleShare = async () => {
+    try {
+      const resp = await axios.post(
+        `https://api.sarvvid-ai.com/share/ipfs/file/${localStorage.getItem(
+          "IMEI"
+        )}/${shareHash}?shareto=${shareEmail}`
+      );
+
+      console.log("share response...", resp);
+      dispatch(updateSharedHistoryInfo(resp.data));
+
+      setShareModal(false);
+      newAlert.success(`File shared to ${shareEmail} successfully`);
+    } catch (error) {
+      console.log("share error...", error);
+      setShareModal(false);
+      newAlert.error(error.response.data.message);
     }
   };
 
@@ -325,36 +342,6 @@ const RequestViewFiles = () => {
           </div>
           <p>Easily access files from a single hash 🚀</p>
         </div>
-        {/* <div className="midPane-header">
-          <div className="navigation-container">
-            <div className="navigation-subcontainer">
-              <h2 style={{ marginRight: "auto" }}>
-               Request files
-              </h2>
-              <div style={{ display: "flex" }} className="button_depth">
-                {darkTheme ? (
-                  <img src={gridDarkIcon} alt="grid" />
-                ) : (
-                  <img style={{ opacity: "0.5" }} src={gridIcon} alt="grid" />
-                )}
-              </div>
-            </div>
-
-            <Navigation />
-          </div>
-        </div>
-        <div className="table-header">
-          <p>Name</p>
-          <p>Size</p>
-          <p>Type</p>
-        </div>
-        <Route path="*" component={Card} />
-        <div
-          className="footer_msg"
-          style={{ marginTop: "2rem", color: "#acacac" }}
-        >
-          <p>Made for Web3. Made with love from bharat</p>
-        </div> */}
       </div>
       <div className="req_container">
         <div className={`left_req_container ${darkTheme ? "dark" : ""}`}>
@@ -380,19 +367,33 @@ const RequestViewFiles = () => {
         <div className={`right_req_container ${darkTheme ? "dark" : ""}`}>
           <div className="req_table-header">
             <p>Serial no.</p>
-            <p>File hash</p>
+            <p>File name</p>
             <p>Copy</p>
+            <p>Share</p>
           </div>
           {allHashes.map((item, index) => (
-            <div className={`card-container ${darkTheme ? "dark-theme" : ""}`}>
+            <div
+              className={`card-container ${darkTheme ? "dark-theme" : ""}`}
+              key={index}
+            >
               <div className="file-card">
                 <div className="file-no">{index + 1}</div>
-                <div className="file-hash">{item.hash}</div>
+                <div className="file-hash">{item.filename}</div>
                 <div className="file-copy">
                   <img
                     src={copyIcon}
                     alt="copy"
                     onClick={() => copyFileHash(item.hash)}
+                  />
+                </div>
+                <div className="file-share">
+                  <img
+                    src={shareIcon}
+                    alt="share"
+                    onClick={() => {
+                      setShareHash(item.hash);
+                      setShareModal(true);
+                    }}
                   />
                 </div>
               </div>
@@ -421,6 +422,36 @@ const RequestViewFiles = () => {
             <p>{fileHash1}</p>
             <img src={copyIcon} alt="copy" />
           </div>
+        </div>
+      </Modal>
+      <Modal
+        open={shareModal}
+        onClose={() => setShareModal(false)}
+        className="hash_modal"
+      >
+        <div className="hash_modal_inner">
+          <h1>Share your file</h1>
+          <h4>Enter the email-id to which you want to share the file</h4>
+          <input
+            type="search"
+            label="Search"
+            placeholder="Enter email"
+            id="outlined-search"
+            style={{ background: "#ededed" }}
+            className={`searchBar_text  ${darkTheme ? "dark" : ""} hash_search`}
+            value={shareEmail}
+            onChange={(e) => setShareEmail(e.target.value)}
+          />
+          <button
+            type="button"
+            className="requestFiles_btn"
+            style={{ marginInline: "auto", marginTop: "2rem" }}
+            onClick={() => {
+              handleShare();
+            }}
+          >
+            Share
+          </button>
         </div>
       </Modal>
       {animationOpen ? <UploadLottie /> : ""}

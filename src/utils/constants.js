@@ -9,6 +9,9 @@ const ADD_RECYCLE_ENTRY = "__add_recycle_entry__";
 const DELETE_RECYCLE_ENTRY = "__delete_recycle_entry__";
 const SET_RECYCLE_ENTRY = "__set_recycle_entry__";
 
+const SET_SHARED_ENTRY = "__set_shared_entry__";
+const SET_SHAREDHISTORY_ENTRY = "__set_sharedhistory_entry__";
+
 const SET_UPLOAD_LOADING = "_set_upload_loading";
 const SET_DELETE_LOADING = "_set_delete_loading";
 const SET_DOWNLOAD_LOADING = "set_download_loading";
@@ -35,5 +38,7 @@ export {
   SET_ALL_DATA,
   SET_DELETE_LOADING,
   SET_UPLOAD_LOADING,
-  SET_DOWNLOAD_LOADING
+  SET_DOWNLOAD_LOADING,
+  SET_SHARED_ENTRY,
+  SET_SHAREDHISTORY_ENTRY,
 };

@@ -544,6 +544,7 @@ function LoginForm(props) {
         localStorage.setItem("ping", 130);
         localStorage.setItem("user_name", resp.data.username);
         localStorage.setItem("user_number", resp.data.phone);
+        localStorage.setItem("avatar", resp.data.imgUri);
 
         const storageData = setStorage(
           resp.data.used_bytes,
@@ -662,7 +663,7 @@ function LoginForm(props) {
         props.updateTitle("Home");
         props.history.push("/");
 
-        window.location.reload();
+        // window.location.reload();
       } else {
         console.log("TRYING AGAIN<<<<<<<<<<<<<<");
       }

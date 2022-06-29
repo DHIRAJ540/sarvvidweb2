@@ -18,6 +18,8 @@
   padding: 2rem;
   border-radius: 25px;
   background: #fff;
+  display: flex;
+  flex-direction: column;
 }
 
 .hash_modal {
